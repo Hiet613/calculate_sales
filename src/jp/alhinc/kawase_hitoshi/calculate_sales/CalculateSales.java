@@ -198,77 +198,47 @@ public class CalculateSales {
 				}
 			}
 		}
-		//支店別の総売り上げをソート
-		//ソート用の支店売上（sortedbranchsales）List 生成
-		List<Map.Entry<String,Long>> sortedbranchsales = new ArrayList<Map.Entry<String,Long>>(branchsales.entrySet());
-		Collections.sort(sortedbranchsales, new Comparator<Map.Entry<String,Long>>() {
-			@Override
-		public int compare(	Entry<String,Long> entry1, Entry<String,Long> entry2) {
-			return ((Long)entry2.getValue()).compareTo((Long)entry1.getValue());
-			}
-		});
-		//このリストには要素の中にマップが入ってる（キーと値）
-		//支店別売上ファイル出力の処理
-		File stob = new File(args[0]+File.separator+"branch.out");
-		BufferedWriter bwbranch = null;
-		try{
-			FileWriter fw = new FileWriter(stob);
-			bwbranch = new BufferedWriter(fw);
-			for (Entry<String,Long> s : sortedbranchsales) {
-				bwbranch.write(s.getKey()+ "," +branchnames.get(s.getKey()) + "," + s.getValue() + System.getProperty("line.separator"));
-			}
-		//branch.outがロックされていたとき
-		}catch(FileNotFoundException m){
+		if(OutPut(args[0],branchnames,branchsales,"branch.out") == false){
 			System.out.println("予期せぬエラーが発生しました");
 			return;
-		}catch(IOException e){
-				System.out.println("予期せぬエラーが発生しました");
-				return;
-		}finally{
-			if(bwbranch != null){
-				try{
-					bwbranch.close();
-				}catch(IOException e){
-					System.out.println("予期せぬエラーが発生しました");
-					return;
-				}
-			}
 		}
-		//支店別の総売り上げをソート
-		//ソート用の商品売上（sortedcommoditysales）List 生成
-		List<Map.Entry<String,Long>> sortedcommoditysales= new ArrayList<Map.Entry<String,Long>>(commoditysales.entrySet());
-		Collections.sort(sortedcommoditysales, new Comparator<Map.Entry<String,Long>>() {
+		if(OutPut(args[0],branchnames,branchsales,"commodity.out") == false){
+			System.out.println("予期せぬエラーが発生しました");
+			return;
+		}
+	}
+//---------------------------------------------分けたメソッド----------------------------------------------------//
+	static boolean OutPut(String s, HashMap<String,String> names,HashMap<String,Long> sales, String outputname){
+		List<Map.Entry<String,Long>> sortedsales = new ArrayList<Map.Entry<String,Long>>(sales.entrySet());
+		Collections.sort(sortedsales, new Comparator<Map.Entry<String,Long>>() {
 			@Override
 		public int compare(	Entry<String,Long> entry1, Entry<String,Long> entry2) {
 			return ((Long)entry2.getValue()).compareTo((Long)entry1.getValue());
 			}
 		});
-		//このリストには要素の中にマップが入ってる（キーと値）
-		//ファイル出力の処理
-		File goob = new File(args[0]+File.separator+"commodity.out");
-		BufferedWriter bwcommodity = null;
+		File stob = new File(s + File.separator + outputname);
+		BufferedWriter brout = null;
 		try{
-			FileWriter fw = new FileWriter(goob);
-			bwcommodity = new BufferedWriter(fw);
-			for (Entry<String,Long> s : sortedcommoditysales) {
-				bwcommodity.write(s.getKey()+ "," + commoditynames.get(s.getKey())+ "," + s.getValue());
-				bwcommodity.newLine();
+			FileWriter fw = new FileWriter(stob);
+			brout = new BufferedWriter(fw);
+			for (Entry<String,Long> r : sortedsales) {
+				brout.write(r.getKey()+ "," +names.get(r.getKey()) + "," + r.getValue());
+				brout.newLine();
 			}
+		//アウトプットファイルがロックされていたとき
 		}catch(FileNotFoundException m){
-				System.out.println("予期せぬエラーが発生しました");
-				return;
+			return false;
 		}catch(IOException e){
-				System.out.println("予期せぬエラーが発生しました");
-				return;
+			return false;
 		}finally{
-			if(bwcommodity != null){
+			if(brout != null){
 				try{
-					bwcommodity.close();
+					brout.close();
 				}catch(IOException e){
-					System.out.println("予期せぬエラーが発生しました");
-					return;
+					return false;
 				}
 			}
 		}
+		return true;
 	}
 }
