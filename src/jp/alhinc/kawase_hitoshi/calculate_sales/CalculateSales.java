@@ -33,77 +33,75 @@ public class CalculateSales {
 		File branchfiles = new File(args[0]+File.separator+"branch.lst");
 		BufferedReader brbranchlst = null;
 		//支店定義ファイルの存在確認
-		if(branchfiles.exists()){
-			try{
-				FileReader fr = new FileReader(branchfiles);
-				brbranchlst = new BufferedReader(fr);
-				String s;
-				while((s = brbranchlst.readLine()) != null) {
-					String[] arr;
-					arr = s.split(",");
-					//支店コードのフォーマット確認(コード、店名となっているか、コードが３桁の数字か）
-					if(arr.length == 2 && arr[0].matches("\\d{3}")) {
-						branchnames.put(arr[0], arr[1]);
-						branchsales.put(arr[0], 0L);
-					}else{
-						System.out.println("支店定義ファイルのフォーマットが不正です");
-						return;
-					}
-				}
-			}catch(IOException e) {
-				System.out.println("予期せぬエラーが発生しました");
-				return;
-			}finally{
-				if (brbranchlst != null){
-					try{
-						brbranchlst.close();
-					}catch(IOException e){
-						System.out.println("予期せぬエラーが発生しました");
-						return;
-					}
-				}
-			}
-			//支店定義ファイルが存在しない場合
-		}else {
+		if(!branchfiles.exists()){
 			System.out.println("支店定義ファイルが存在しません");
 			return;
+		}
+		try{
+			FileReader fr = new FileReader(branchfiles);
+			brbranchlst = new BufferedReader(fr);
+			String s;
+			while((s = brbranchlst.readLine()) != null) {
+				String[] arr;
+				arr = s.split(",");
+				//支店コードのフォーマット確認(コード、店名となっているか、コードが３桁の数字か）
+				if(arr.length == 2 && arr[0].matches("\\d{3}")) {
+					branchnames.put(arr[0], arr[1]);
+					branchsales.put(arr[0], 0L);
+				}else{
+					System.out.println("支店定義ファイルのフォーマットが不正です");
+					return;
+				}
+			}
+		}catch(IOException e) {
+			System.out.println("予期せぬエラーが発生しました");
+			return;
+		}finally{
+			if (brbranchlst != null){
+				try{
+					brbranchlst.close();
+				}catch(IOException e){
+					System.out.println("予期せぬエラーが発生しました");
+					return;
+				}
+			}
 		}
 		//商品定義ファイルの読み込み～値の保持
 		File commodityfiles = new File(args[0]+File.separator+"commodity.lst");
 		BufferedReader brcommoditylst = null;
-		if(commodityfiles.exists()){
-			try{
-				FileReader fr = new FileReader(commodityfiles);
-				brcommoditylst = new BufferedReader(fr);
-				String s;
-				while((s = brcommoditylst.readLine()) != null) {
-					String[] arr;
-					arr = s.split(",");
-					//商品定義ファイルのフォーマット確認（コード、商品名となっているか、コードがアルファベット数字８桁）
-					if(arr.length == 2 && arr[0].matches("[0-z]{8}")){
-						commoditynames.put(arr[0], arr[1]);
-						commoditysales.put(arr[0], 0L);
-					}else{
-						System.out.println("商品定義ファイルのフォーマットが不正です");
-						return;
-					}
-				}
-			}catch(IOException e) {
-				System.out.println("支店定義ファイルのフォーマットが不正です");
-				return;
-			}finally {
-				if(brcommoditylst != null){
-					try{
-						brcommoditylst.close();
-					}catch(IOException e){
-						System.out.println("支店定義ファイルのフォーマットが不正です");
-						return;
-					}
-				}
-			}
-		}else{
+		//商品定義ファイルの存在確認
+		if(!commodityfiles.exists()){
 			System.out.println("商品定義ファイルが存在しません");
 			return;
+		}
+		try{
+			FileReader fr = new FileReader(commodityfiles);
+			brcommoditylst = new BufferedReader(fr);
+			String s;
+			while((s = brcommoditylst.readLine()) != null) {
+				String[] arr;
+				arr = s.split(",");
+				//商品定義ファイルのフォーマット確認（コード、商品名となっているか、コードがアルファベット数字８桁）
+				if(arr.length == 2 && arr[0].matches("[0-z]{8}")){
+					commoditynames.put(arr[0], arr[1]);
+					commoditysales.put(arr[0], 0L);
+				}else{
+					System.out.println("商品定義ファイルのフォーマットが不正です");
+					return;
+				}
+			}
+		}catch(IOException e) {
+			System.out.println("支店定義ファイルのフォーマットが不正です");
+			return;
+		}finally {
+			if(brcommoditylst != null){
+				try{
+					brcommoditylst.close();
+				}catch(IOException e){
+					System.out.println("支店定義ファイルのフォーマットが不正です");
+					return;
+				}
+			}
 		}
 		//売上ファイル検索～桁数連番。拡張子チェック
 		File salesfiles = new File(args[0]);
@@ -159,7 +157,8 @@ public class CalculateSales {
 				}
 				//売上ファイル３行目の文字列が数値であるかを判定後、LONG型に変換
 				if(!thi.matches("^[0-9]+$")){
-					System.out.println(numonly.get(fc)+".rcdのフォーマットが不正です");
+					System.out.println("予期せぬエラーが発生しました");
+					return;
 				}
 				Long thiL = Long.parseLong(thi);
 				//売上ファイル３行目の桁数チェック
@@ -216,7 +215,7 @@ public class CalculateSales {
 			FileWriter fw = new FileWriter(stob);
 			bwbranch = new BufferedWriter(fw);
 			for (Entry<String,Long> s : sortedbranchsales) {
-				bwbranch.write(s.getKey()+ "," +branchnames.get(s.getKey()) + "," + s.getValue() + "\r\n");
+				bwbranch.write(s.getKey()+ "," +branchnames.get(s.getKey()) + "," + s.getValue() + System.getProperty("line.separator"));
 			}
 		//branch.outがロックされていたとき
 		}catch(FileNotFoundException m){
@@ -252,7 +251,8 @@ public class CalculateSales {
 			FileWriter fw = new FileWriter(goob);
 			bwcommodity = new BufferedWriter(fw);
 			for (Entry<String,Long> s : sortedcommoditysales) {
-				bwcommodity.write(s.getKey()+ "," + commoditynames.get(s.getKey())+ "," + s.getValue() +"\r\n");
+				bwcommodity.write(s.getKey()+ "," + commoditynames.get(s.getKey())+ "," + s.getValue());
+				bwcommodity.newLine();
 			}
 		}catch(FileNotFoundException m){
 				System.out.println("予期せぬエラーが発生しました");
