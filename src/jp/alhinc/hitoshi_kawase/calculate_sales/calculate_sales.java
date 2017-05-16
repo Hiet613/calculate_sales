@@ -18,11 +18,11 @@ import java.util.Map.Entry;
 
 public class calculate_sales {
 	public static void main (String[] args){
-		HashMap<String,String> branchnames =new HashMap<String, String>();
-		HashMap<String,Long> branchsales = new HashMap<String, Long>();
-		HashMap<String,String> commoditynames = new HashMap<String,String>();
-		HashMap<String,Long> commoditysales = new HashMap<String, Long>();
-		ArrayList<String> numonly = new ArrayList<String>();
+		HashMap<String,String> branchnames =new HashMap<>();
+		HashMap<String,Long> branchsales = new HashMap<>();
+		HashMap<String,String> commoditynames = new HashMap<>();
+		HashMap<String,Long> commoditysales = new HashMap<>();
+		ArrayList<String> numonly = new ArrayList<>();
 		//コマンドライン引数が渡されていない場合
 		//コマンドライン引数が２つ以上の場合
 		if(args.length != 1 ){
