@@ -142,26 +142,29 @@ public class CalculateSales {
 				String thi  = brserial.readLine();
 				//エラーチェック用に４行目も読み込む
 				String four = brserial.readLine();
+				//売上ファイルの行数チェック
+				if(fir == null || sec == null ||thi == null || four != null){
+					System.out.println(numonly.get(fc)+".rcdのフォーマットが不正です");
+					return;
+				}
 				//売上ファイルの支店コードが定義ファイルから参照できるかチェック
-				if(branchnames.get(fir) == null){
+				if(!branchnames.containsKey(fir)){
 					System.out.println(numonly.get(fc) + ".rcdの支店コードが不正です");
 					return;
 				}
 				//売上ファイルの商品コードが定義ファイルから参照できるかチェック
-				if(commoditynames.get(sec) == null){
+				if(!commoditynames.containsKey(sec)){
 					System.out.println(numonly.get(fc) + ".rcdの商品コードが不正です");
 					return;
 				}
-				//売上ファイルの行数チェック
-				if(thi == null || four != null){
+				//売上ファイル３行目の文字列が数値であるかを判定後、LONG型に変換
+				if(!thi.matches("^[0-9]+$")){
 					System.out.println(numonly.get(fc)+".rcdのフォーマットが不正です");
-					return;
 				}
-				//売上ファイル３行目の数字文字列をLONG型に変換
 				Long thiL = Long.parseLong(thi);
 				//売上ファイル３行目の桁数チェック
 				if(10 < String.valueOf(thiL).length()){
-					System.out.println("合計金額が１０桁を超えました");
+					System.out.println("合計金額が10桁を超えました");
 					return;
 				}
 				//定義ファイル読込時に設定した各売上マップに売上を計上
@@ -170,7 +173,7 @@ public class CalculateSales {
 				branchsales.put(fir,thital);
 				//計上後の桁数チェック
 				if(10 < String.valueOf(branchsales.get(fir)).length()){
-					System.out.println("合計金額が１０桁を超えました");
+					System.out.println("合計金額が10桁を超えました");
 					return;
 				}
 				//次は商品コードを利用して商品売上マップに計上する。
@@ -179,7 +182,7 @@ public class CalculateSales {
 				commoditysales.put(sec,setal);
 				//計上後の桁数チェック
 				if(10 < String.valueOf(commoditysales.get(sec)).length()){
-					System.out.println("合計金額が１０桁を超えました");
+					System.out.println("合計金額が10桁を超えました");
 					return;
 				}
 			}catch(IOException e) {
@@ -207,7 +210,7 @@ public class CalculateSales {
 		});
 		//このリストには要素の中にマップが入ってる（キーと値）
 		//支店別売上ファイル出力の処理
-		File stob = new File(args[0]+File.separator+"baranch.out");
+		File stob = new File(args[0]+File.separator+"branch.out");
 		BufferedWriter bwbranch = null;
 		try{
 			FileWriter fw = new FileWriter(stob);
