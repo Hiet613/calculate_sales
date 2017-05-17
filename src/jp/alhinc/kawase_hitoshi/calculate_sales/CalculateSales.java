@@ -24,7 +24,7 @@ public class CalculateSales {
 		//コマンドライン引数が渡されていない場合
 		//コマンドライン引数が２つ以上の場合
 		if(args.length != 1 ){
-		System.out.println("予期せぬエラーが発生しました");
+			System.out.println("予期せぬエラーが発生しました");
 		return;
 		}
 		//定義ファイル読込～値の保持メソッド
@@ -71,7 +71,7 @@ public class CalculateSales {
 				br = new BufferedReader(fr);
 				String fir = br.readLine();
 				String sec = br.readLine();
-				String thi  = br.readLine();
+				String thi = br.readLine();
 				//エラーチェック用に４行目も読み込む
 				String four = br.readLine();
 				//売上ファイルの行数チェック
@@ -90,7 +90,7 @@ public class CalculateSales {
 					return;
 				}
 				//売上ファイル３行目の文字列が数値であるかを判定後、LONG型に変換
-				if(!thi.matches("^[0-9] + $")){
+				if(!thi.matches("^[0-9]+$")){
 					System.out.println("予期せぬエラーが発生しました");
 					return;
 				}
