@@ -64,60 +64,60 @@ public class CalculateSales {
 		}
 		//連番ファイルの読込
 		for(int i = 0; i < rcdList.size(); i++) {
-			File file = new File(args[0] + File.separator + rcdList.get(i).getName());
+			File file = new File(args[0], rcdList.get(i).getName());
 			BufferedReader br = null;
 			try {
 				FileReader fr = new FileReader(file);
 				br = new BufferedReader(fr);
-				String fir = br.readLine();
-				String sec = br.readLine();
-				String thi = br.readLine();
+				String firstLine = br.readLine();
+				String seccondLine = br.readLine();
+				String thirdLine = br.readLine();
 				//エラーチェック用に４行目も読み込む
-				String four = br.readLine();
+				String fourthLine = br.readLine();
 				//売上ファイルの行数チェック
-				if(fir == null || sec == null || thi == null || four != null) {
+				if(firstLine == null || seccondLine == null || thirdLine == null || fourthLine != null) {
 					System.out.println(rcdList.get(i).getName() + "のフォーマットが不正です");
 					return;
 				}
 				//売上ファイルの支店コードが定義ファイルから参照できるかチェック
-				if(!branchNames.containsKey(fir)) {
+				if(!branchNames.containsKey(firstLine)) {
 					System.out.println(rcdList.get(i).getName() + "の支店コードが不正です");
 					return;
 				}
 				//売上ファイルの商品コードが定義ファイルから参照できるかチェック
-				if(!commodityNames.containsKey(sec)) {
+				if(!commodityNames.containsKey(seccondLine)) {
 					System.out.println(rcdList.get(i).getName() + "の商品コードが不正です");
 					return;
 				}
 				//売上ファイル３行目の文字列が数値であるかを判定後、LONG型に変換
-				if(!thi.matches("^[0-9]+$")) {
+				if(!thirdLine.matches("^[0-9]+$")) {
 					System.out.println("予期せぬエラーが発生しました");
 					return;
 				}
-				Long thiL = Long.parseLong(thi);
+				Long thirdLineLong = Long.parseLong(thirdLine);
 				//売上ファイル３行目の桁数チェック
-				if(10 < String.valueOf(thiL).length()) {
+				if(10 < String.valueOf(thirdLineLong).length()) {
 					System.out.println("合計金額が10桁を超えました");
 					return;
 				}
 				//定義ファイル読込時に設定した各売上マップに売上を計上
-				Long total = branchSales.get(fir);
-				Long thital = thiL + total;
+				Long branchSalesValue = branchSales.get(firstLine);
+				Long branchSum = thirdLineLong + branchSalesValue;
 				//計上後の桁数チェック
-				if(10 < String.valueOf(thital).length()) {
+				if(10 < String.valueOf(branchSum).length()) {
 					System.out.println("合計金額が10桁を超えました");
 					return;
 				}
 				//次は商品コードを利用して商品売上マップに計上する。
-				Long total2 = commoditySales.get(sec);
-				Long setal = thiL + total2;
+				Long commoditySalesValue = commoditySales.get(seccondLine);
+				Long commoditySum = thirdLineLong + commoditySalesValue;
 				//計上後の桁数チェック
-				if(10 < String.valueOf(setal).length()) {
+				if(10 < String.valueOf(commoditySum).length()) {
 					System.out.println("合計金額が10桁を超えました");
 					return;
 				}
-				branchSales.put(fir,thital);
-				commoditySales.put(sec,setal);
+				branchSales.put(firstLine,branchSum);
+				commoditySales.put(seccondLine,commoditySum);
 			} catch(IOException e) {
 				System.out.println("予期せぬエラーが発生しました");
 				return;
