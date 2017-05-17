@@ -25,7 +25,7 @@ public class CalculateSales {
 		//コマンドライン引数が２つ以上の場合
 		if(args.length != 1 ){
 			System.out.println("予期せぬエラーが発生しました");
-		return;
+			return;
 		}
 		//定義ファイル読込～値の保持メソッド
 		if(!input(args[0], branchNames, branchSales, "branch.lst", "支店", "\\d{3}")){
