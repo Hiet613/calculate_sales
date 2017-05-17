@@ -28,6 +28,7 @@ public class CalculateSales {
 		System.out.println("予期せぬエラーが発生しました");
 		return;
 		}
+		//定義ファイル読込～値の保持メソッド
 		if(!input(args[0], branchnames, branchsales, "branch.lst", "支店定義", "\\d{3}")){
 			return;
 		}
