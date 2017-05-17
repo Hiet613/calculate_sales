@@ -54,29 +54,29 @@ public class CalculateSales {
 		}
 		Collections.sort(numOnly);
 		//数字のみのリストを最小値からカウントして歯抜けのチェック
-		for(int i =0; i < numOnly.size() -1; i++){
+		for(int i = 0; i < numOnly.size() - 1; i++){
 			int msnX = Integer.parseInt(numOnly.get(i));
 			int msnXX = Integer.parseInt(numOnly.get(i + 1));
-			if(msnX+1 != msnXX){
+			if(msnX + 1 != msnXX){
 				System.out.println("売上ファイル名が連番になっていません");
 				return;
 			}
 		}
 		//連番ファイルの読込
 		for(int i = 0; i < rcdList.size(); i++){
-			File file = new File(args[0] + File.separator +rcdList.get(i).getName());
+			File file = new File(args[0] + File.separator + rcdList.get(i).getName());
 			BufferedReader br = null;
 			try {
 				FileReader fr = new FileReader(file);
 				br = new BufferedReader(fr);
 				String fir = br.readLine();
-				String sec =br.readLine();
+				String sec = br.readLine();
 				String thi  = br.readLine();
 				//エラーチェック用に４行目も読み込む
 				String four = br.readLine();
 				//売上ファイルの行数チェック
 				if(fir == null || sec == null || thi == null || four != null){
-					System.out.println(rcdList.get(i).getName()+"のフォーマットが不正です");
+					System.out.println(rcdList.get(i).getName() + "のフォーマットが不正です");
 					return;
 				}
 				//売上ファイルの支店コードが定義ファイルから参照できるかチェック
@@ -86,11 +86,11 @@ public class CalculateSales {
 				}
 				//売上ファイルの商品コードが定義ファイルから参照できるかチェック
 				if(!commodityNames.containsKey(sec)){
-					System.out.println(rcdList.get(i).getName()+ "の商品コードが不正です");
+					System.out.println(rcdList.get(i).getName() + "の商品コードが不正です");
 					return;
 				}
 				//売上ファイル３行目の文字列が数値であるかを判定後、LONG型に変換
-				if(!thi.matches("^[0-9]+$")){
+				if(!thi.matches("^[0-9] + $")){
 					System.out.println("予期せぬエラーが発生しました");
 					return;
 				}
@@ -163,7 +163,7 @@ public class CalculateSales {
 					names.put(arr[0], arr[1]);
 					sales.put(arr[0], 0L);
 				}else{
-					System.out.println(definition +"定義ファイルのフォーマットが不正です");
+					System.out.println(definition + "定義ファイルのフォーマットが不正です");
 					return false;
 				}
 			}
@@ -199,7 +199,7 @@ public class CalculateSales {
 			FileWriter fw = new FileWriter(file);
 			bw = new BufferedWriter(fw);
 			for (Entry<String,Long> r : sortedSales) {
-				bw.write(r.getKey() +  "," +names.get(r.getKey()) + "," + r.getValue());
+				bw.write(r.getKey() +  "," + names.get(r.getKey()) + "," + r.getValue());
 				bw.newLine();
 			}
 		}catch(IOException e){
